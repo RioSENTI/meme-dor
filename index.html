@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vote for the Meme d'or</title>
+<style>
+  /* BODY & BACKGROUND */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #2c2c2c;
+    background-image: 
+      linear-gradient(45deg, #3c3c3c 25%, transparent 25%),
+      linear-gradient(-45deg, #3c3c3c 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #3c3c3c 75%),
+      linear-gradient(-45deg, transparent 75%, #3c3c3c 75%);
+    background-size: 60px 60px;
+    background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+  }
+
+  h1 {
+    margin-bottom: 50px;
+    color: #f2f2f2;
+    font-size: 3em;
+    text-shadow: 2px 2px 4px #000;
+  }
+
+  /* MEME GRID */
+  .memes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  /* MEME CARD */
+  .meme-card {
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    border-radius: 15px;
+    padding: 15px;
+    width: 240px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    cursor: pointer;
+  }
+
+  .meme-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+  }
+
+  .meme-card img {
+    width: 100%;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .meme-card img:hover {
+    transform: scale(1.03);
+  }
+
+  .meme-card h3 {
+    margin: 12px 0;
+    font-size: 1.1em;
+    word-wrap: break-word;
+    color: #333;
+  }
+
+  /* VOTE BUTTON */
+  .meme-card button {
+    background: linear-gradient(90deg, #ff7f50, #ff4500);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+  }
+
+  .meme-card button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #ff4500, #ff6347);
+  }
+
+  .meme-card button:disabled {
+    background: #888;
+    cursor: default;
+    transform: none;
+  }
+
+  .meme-card .votes {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #555;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .meme-card {
+      width: 90%;
+    }
+    h1 {
+      font-size: 2em;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Vote for the Meme d'or</h1>
+<div class="memes">
+  <div class="meme-card" data-name="41.jpg">
+    <img src="images/41.jpg" alt="41.jpg">
+    <h3>41.jpg</h3>
+    <button onclick="vote(this)">Vote</button>
+    <p class="votes">Votes: 0</p>
+  </div>
+  <div class="meme-card" data-name="67.jpeg">
+    <img src="images/67.jpeg" alt="67.jpeg">
+    <h3>67.jpeg</h3>
+    <button onclick="vote(this)">Vote</button>
+    <p class="votes">Votes: 0</p>
+  </div>
+  <div class="meme-card" data-name="druski.jpg">
+    <img src="images/druski.jpg" alt="druski.jpg">
+    <h3>druski.jpg</h3>
+    <button onclick="vote(this)">Vote</button>
+    <p class="votes">Votes: 0</p>
+  </div>
+  <div class="meme-card" data-name="eye.jpg">
+    <img src="images/eye.jpg" alt="eye.jpg">
+    <h3>eye.jpg</h3>
+    <button onclick="vote(this)">Vote</button>
+    <p class="votes">Votes: 0</p>
+  </div>
+  <div class="meme-card" data-name="kendrick.jpg">
+    <img src="images/kendrick.jpg" alt="kendrick.jpg">
+    <h3>kendrick.jpg</h3>
+    <button onclick="vote(this)">Vote</button>
+    <p class="votes">Votes: 0</p>
+  </div>
+  <div class="meme-card" data-name="property.jpg">
+    <img src="images/property.jpg" alt="property.jpg">
+    <h3>property.jpg</h3>
+    <button onclick="vote(this)">Vote</button>
+    <p class="votes">Votes: 0</p>
+  </div>
+</div>
+
+<script>
+  // Load votes from localStorage
+  document.querySelectorAll('.meme-card').forEach(card => {
+    const name = card.dataset.name;
+    const savedVotes = localStorage.getItem('votes_' + name);
+    if (savedVotes) {
+      card.querySelector('.votes').textContent = 'Votes: ' + savedVotes;
+    }
+    const voted = localStorage.getItem('voted_' + name);
+    if (voted) {
+      const btn = card.querySelector('button');
+      btn.disabled = true;
+      btn.textContent = 'Voted';
+    }
+  });
+
+  function vote(button) {
+    const card = button.parentElement;
+    const name = card.dataset.name;
+    const votesEl = card.querySelector('.votes');
+    let votes = parseInt(votesEl.textContent.replace('Votes: ', '')) || 0;
+    votes++;
+    votesEl.textContent = 'Votes: ' + votes;
+    button.disabled = true;
+    button.textContent = 'Voted';
+    
+    // Save votes in localStorage
+    localStorage.setItem('votes_' + name, votes);
+    localStorage.setItem('voted_' + name, true);
+  }
+</script>
+</body>
+</html>
